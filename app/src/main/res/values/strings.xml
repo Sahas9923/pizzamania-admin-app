@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">PizzaManiaAdmin</string>
+
+    <string-array name="branches_array">
+        <item>All</item>
+        <item>Colombo</item>
+        <item>Galle</item>
+    </string-array>
+
+    <string-array name="status_array">
+        <item>All</item>
+        <item>Pending</item>
+        <item>Completed</item>
+        <item>Cancelled</item>
+    </string-array>
 </resources>
