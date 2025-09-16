@@ -1,12 +1,10 @@
 package com.example.pizzamaniaadmin;
 
 import android.content.Context;
-import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,7 +25,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     @NonNull
     @Override
     public OrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
+        View view = LayoutInflater.from(context)
                 .inflate(R.layout.activity_order_item, parent, false);
         return new OrderViewHolder(view);
     }
@@ -36,18 +34,39 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         OrderModel order = orderList.get(position);
 
-        // ✅ Bind main order details
-        holder.textOrderId.setText("Order ID: " + order.getOrderId());
+        holder.textOrderId.setText(order.getOrderId());
         holder.textUser.setText("Customer: " + order.getUserName());
-        holder.textEmail.setText("Email: " + order.getUserEmail());
+        holder.textEmail.setText("Phone: " + order.getUserEmail());
         holder.textBranch.setText("Branch: " + order.getBranch());
-        holder.textStatus.setText("Status: " + order.getOrderStatus());
+        holder.textStatus.setText(order.getOrderStatus());
         holder.textAddress.setText("Delivery: " + order.getDeliveryAddress());
         holder.textDate.setText("Date: " + order.getDate());
         holder.textTime.setText("Time: " + order.getTime());
         holder.textTotal.setText("Total: LKR " + order.getTotalAmount());
 
-        holder.layoutItems.removeAllViews();
+        switch (order.getOrderStatus().toLowerCase()) {
+            case "pending":
+                holder.textStatus.setBackgroundColor(Color.parseColor("#FF9800")); // Orange
+                break;
+            case "approved":
+                holder.textStatus.setBackgroundColor(Color.parseColor("#2196F3")); // Blue
+                break;
+            case "processing":
+                holder.textStatus.setBackgroundColor(Color.parseColor("#9C27B0")); // Purple
+                break;
+            case "dispatched":
+                holder.textStatus.setBackgroundColor(Color.parseColor("#03A9F4")); // Light Blue
+                break;
+            case "delivered":
+                holder.textStatus.setBackgroundColor(Color.parseColor("#4CAF50")); // Green
+                break;
+            case "cancelled":
+                holder.textStatus.setBackgroundColor(Color.parseColor("#F44336")); // Red
+                break;
+            default:
+                holder.textStatus.setBackgroundColor(Color.GRAY); // Default gray
+                break;
+        }
 
     }
 
@@ -58,8 +77,6 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
     static class OrderViewHolder extends RecyclerView.ViewHolder {
         TextView textOrderId, textUser, textEmail, textBranch, textStatus, textAddress, textDate, textTime, textTotal;
-        LinearLayout layoutItems;
-        Button btnViewMore;
 
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);

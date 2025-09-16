@@ -25,7 +25,7 @@ public class AddPizzaActivity extends AppCompatActivity {
     ImageView pizzaImageView;
 
     Uri selectedImageUri;
-    String pizzaId = null; // If editing existing pizza
+    String pizzaId = null;
     String currentImageUrl = null;
 
     DatabaseReference databaseReference;
@@ -46,7 +46,6 @@ public class AddPizzaActivity extends AppCompatActivity {
         btnSave = findViewById(R.id.btnSave);
         pizzaImageView = findViewById(R.id.pizzaImageView);
 
-        // Check if editing existing pizza
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra("pizza")) {
             PizzaModel pizza = (PizzaModel) intent.getSerializableExtra("pizza");
@@ -58,12 +57,9 @@ public class AddPizzaActivity extends AppCompatActivity {
             etPrice.setText(String.valueOf(pizza.getPrice()));
             etDesc.setText(pizza.getDescription());
             if (currentImageUrl != null && !currentImageUrl.isEmpty()) {
-                // If using Glide, otherwise skip
-                pizzaImageView.setImageURI(null); // placeholder
+                pizzaImageView.setImageURI(null);
             }
         }
-
-        // Select image
         pizzaImageView.setOnClickListener(v -> {
             Intent pick = new Intent();
             pick.setType("image/*");
@@ -85,14 +81,13 @@ public class AddPizzaActivity extends AppCompatActivity {
             double price = Double.parseDouble(priceStr);
 
             if (pizzaId == null) {
-                // New pizza
+
                 if (selectedImageUri == null) {
                     Toast.makeText(this, "Select an image!", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 uploadPizza(name, size, price, desc, selectedImageUri);
             } else {
-                // Update pizza
                 if (selectedImageUri != null) {
                     uploadPizza(name, size, price, desc, selectedImageUri); // update with new image
                 } else {

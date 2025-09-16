@@ -1,8 +1,11 @@
 package com.example.pizzamaniaadmin;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -33,7 +36,7 @@ public class OrderActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order); // make sure this matches your XML
+        setContentView(R.layout.activity_order);
 
         recyclerView = findViewById(R.id.recyclerViewOrders);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -42,13 +45,42 @@ public class OrderActivity extends AppCompatActivity {
         spinnerStatus = findViewById(R.id.spinnerStatus);
         btnFilter = findViewById(R.id.btnFilter);
 
-        // Pass 'this' as Context to OrderAdapter
+        ImageButton btnBack = findViewById(R.id.btnBack);
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                startActivity(new Intent(OrderActivity.this, HomeActivity.class));
+                finish();
+            }
+        });
+
         orderAdapter = new OrderAdapter(this, filteredOrders);
         recyclerView.setAdapter(orderAdapter);
 
         fetchOrdersFromFirebase();
 
         btnFilter.setOnClickListener(v -> applyFilters());
+
+        Spinner spinnerBranch = findViewById(R.id.spinnerBranch);
+        Spinner spinnerStatus = findViewById(R.id.spinnerStatus);
+
+        ArrayAdapter<CharSequence> branchAdapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.branches_array,
+                R.layout.spinner_item
+        );
+        branchAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        spinnerBranch.setAdapter(branchAdapter);
+
+        ArrayAdapter<CharSequence> statusAdapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.status_array,
+                R.layout.spinner_item
+        );
+        statusAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        spinnerStatus.setAdapter(statusAdapter);
     }
 
     private void fetchOrdersFromFirebase() {
@@ -63,6 +95,7 @@ public class OrderActivity extends AppCompatActivity {
                     order.setOrderId(orderSnap.getKey());
                     String userUid = orderSnap.child("userUid").getValue(String.class);
                     order.setUserUid(userUid);
+
                     order.setBranch(orderSnap.child("nearestBranch").getValue(String.class));
                     order.setOrderStatus(orderSnap.child("orderStatus").getValue(String.class));
                     order.setDeliveryAddress(orderSnap.child("deliveryAddress").getValue(String.class));
@@ -71,23 +104,6 @@ public class OrderActivity extends AppCompatActivity {
                     order.setTotalAmount(orderSnap.child("totalFee").getValue(Double.class) != null ?
                             orderSnap.child("totalFee").getValue(Double.class) : 0.0);
 
-                    // Fetch order items
-                    List<OrderItemModel> items = new ArrayList<>();
-                    if (orderSnap.hasChild("order_items")) {
-                        for (DataSnapshot itemSnap : orderSnap.child("order_items").getChildren()) {
-                            OrderItemModel item = new OrderItemModel();
-                            item.setItemName(itemSnap.child("name").getValue(String.class));
-                            item.setSize(itemSnap.child("size").getValue(String.class));
-                            item.setQuantity(itemSnap.child("quantity").getValue(Integer.class) != null ?
-                                    itemSnap.child("quantity").getValue(Integer.class) : 1);
-                            item.setPrice(itemSnap.child("price").getValue(Double.class) != null ?
-                                    itemSnap.child("price").getValue(Double.class) : 0.0);
-                            items.add(item);
-                        }
-                    }
-                    order.setItems(items);
-
-                    // Fetch user info
                     DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(userUid);
                     userRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -101,6 +117,7 @@ public class OrderActivity extends AppCompatActivity {
                             }
 
                             allOrders.add(order);
+
                             filteredOrders.clear();
                             filteredOrders.addAll(allOrders);
                             orderAdapter.notifyDataSetChanged();
@@ -120,19 +137,28 @@ public class OrderActivity extends AppCompatActivity {
     }
 
     private void applyFilters() {
-        String selectedBranch = spinnerBranch.getSelectedItem().toString();
+        String selectedBranch = spinnerBranch.getSelectedItem().toString().trim();
+        String selectedStatus = spinnerStatus.getSelectedItem().toString().trim();
 
         filteredOrders.clear();
 
         for (OrderModel order : allOrders) {
-            if (selectedBranch.equals("All") || order.getBranch().equalsIgnoreCase(selectedBranch)) {
+            String orderBranch = order.getBranch() != null ? order.getBranch().trim() : "";
+            String orderStatus = order.getOrderStatus() != null ? order.getOrderStatus().trim() : "";
+
+            boolean branchMatch = selectedBranch.equalsIgnoreCase("All") || orderBranch.equalsIgnoreCase(selectedBranch);
+            boolean statusMatch = selectedStatus.equalsIgnoreCase("All") || orderStatus.equalsIgnoreCase(selectedStatus);
+
+            if (branchMatch && statusMatch) {
                 filteredOrders.add(order);
             }
         }
+
         orderAdapter.notifyDataSetChanged();
 
         if (filteredOrders.isEmpty()) {
-            Toast.makeText(this, "No orders found for selected branch", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No orders found with selected filters", Toast.LENGTH_SHORT).show();
         }
     }
+
 }

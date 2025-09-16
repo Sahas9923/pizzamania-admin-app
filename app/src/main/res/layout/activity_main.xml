@@ -1,37 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:gravity="center"
-    android:background="@color/white"
+    android:background="@drawable/background"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/btnMenu"
+    <TextView
+        android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Menu"
-        android:layout_marginBottom="24dp"/>
+        android:layout_marginTop="152dp"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:text="PizzaMania Admin Portal!"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-
-    <Button
-        android:id="@+id/btnOrder"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Orders"
-        android:layout_marginBottom="24dp"/>
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        android:background="#80FFFFFF"
+        android:elevation="8dp"
+        android:orientation="vertical"
+        android:padding="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView4">
 
+        <EditText
+            android:id="@+id/etUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="Enter Email"
+            android:textStyle="bold"
+            android:padding="12dp"
+            android:textColor="#080706"
+            android:textColorHint="#707070"/>
 
-    <Button
-        android:id="@+id/btnBranch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Branch"
-        android:layout_marginBottom="24dp"/>
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="Enter Password"
+            android:inputType="textPassword"
+            android:textStyle="bold"
+            android:padding="12dp"
+            android:textColor="#080706"
+            android:textColorHint="#707070"/>
 
+        <Button
+            android:id="@+id/btnSignIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#00bf63"
+            android:layout_marginTop="20dp"
+            android:padding="12dp"
+            android:text="Sign In"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
 
-</LinearLayout>
+        <CheckBox
+            android:id="@+id/cbRemember"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:textColor="#080706"
+            android:textStyle="bold"
+            android:text="Remember Me" />
+
+        <ImageView
+            android:id="@+id/backgroundImage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/background" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

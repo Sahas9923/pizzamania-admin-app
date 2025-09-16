@@ -5,11 +5,8 @@
     android:layout_height="wrap_content"
     card_view:cardCornerRadius="12dp"
     card_view:cardElevation="6dp"
-    android:layout_marginBottom="12dp"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
-    android:background="#FFFFFF"
-    android:backgroundTint="#FFFFFF">
+    android:layout_margin="8dp"
+    android:backgroundTint="@android:color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,40 +14,38 @@
         android:orientation="vertical"
         android:padding="12dp">
 
-        <!-- Order ID and Status -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingBottom="6dp"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:paddingBottom="6dp">
 
             <TextView
                 android:id="@+id/textOrderId"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="ORD-12345565656"
+                android:text="ORD-12345"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:textColor="#000000" />
+                android:textColor="#000000"/>
 
             <TextView
                 android:id="@+id/textStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Pending"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp"
-                android:background="#FF5722"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:background="@drawable/badge_background"/>
         </LinearLayout>
 
-        <!-- Customer Details -->
         <TextView
             android:id="@+id/textUser"
             android:layout_width="match_parent"
@@ -58,7 +53,7 @@
             android:text="Customer: John Doe"
             android:textColor="#333333"
             android:textSize="14sp"
-            android:paddingBottom="2dp" />
+            android:paddingBottom="2dp"/>
 
         <TextView
             android:id="@+id/textEmail"
@@ -67,7 +62,7 @@
             android:text="Email: john@example.com"
             android:textColor="#555555"
             android:textSize="13sp"
-            android:paddingBottom="2dp" />
+            android:paddingBottom="2dp"/>
 
         <TextView
             android:id="@+id/textBranch"
@@ -76,7 +71,7 @@
             android:text="Branch: Colombo"
             android:textColor="#555555"
             android:textSize="13sp"
-            android:paddingBottom="2dp" />
+            android:paddingBottom="2dp"/>
 
         <TextView
             android:id="@+id/textAddress"
@@ -85,9 +80,8 @@
             android:text="Delivery: 123 Main Street"
             android:textColor="#555555"
             android:textSize="13sp"
-            android:paddingBottom="4dp" />
+            android:paddingBottom="4dp"/>
 
-        <!-- Date, Time & Total -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -102,7 +96,7 @@
                 android:layout_height="wrap_content"
                 android:text="Date: 2025-09-15"
                 android:textColor="#333333"
-                android:textSize="13sp" />
+                android:textSize="13sp"/>
 
             <TextView
                 android:id="@+id/textTime"
@@ -111,40 +105,16 @@
                 android:layout_height="wrap_content"
                 android:text="Time: 16:20"
                 android:textColor="#333333"
-                android:textSize="13sp" />
+                android:textSize="13sp"/>
         </LinearLayout>
 
-        <!-- Total & View More Button -->
-        <LinearLayout
+        <TextView
+            android:id="@+id/textTotal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingTop="4dp">
-
-            <TextView
-                android:id="@+id/textTotal"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="Total: LKR 599"
-                android:textColor="#000000"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/btnViewMore"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="View More"
-                android:textColor="@android:color/white"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:paddingTop="6dp"
-                android:paddingBottom="6dp"/>
-        </LinearLayout>
-
-
-
+            android:text="Total: LKR 599"
+            android:textColor="#000000"
+            android:textSize="14sp"
+            android:textStyle="bold"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

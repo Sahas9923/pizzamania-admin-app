@@ -50,17 +50,15 @@ public class PizzaAdapter extends RecyclerView.Adapter<PizzaAdapter.PizzaViewHol
         holder.tv1.setText(pizza.getName() + " (" + pizza.getSize() + ")");
         holder.tv2.setText("Rs. " + pizza.getPrice() + " - " + pizza.getDescription());
 
-        // Load image from URL without Glide
         new DownloadImageTask(holder.imageView).execute(pizza.getImageUrl());
 
-        // Update button click
+
         holder.btnUpdate.setOnClickListener(v -> {
             Intent intent = new Intent(context, AddPizzaActivity.class);
-            intent.putExtra("pizza", pizza); // PizzaModel should implement Serializable
+            intent.putExtra("pizza", pizza);
             context.startActivity(intent);
         });
 
-        // Delete button click
         holder.btnDelete.setOnClickListener(v -> {
             databaseReference.child(pizza.getId()).removeValue()
                     .addOnSuccessListener(aVoid -> {
@@ -93,7 +91,6 @@ public class PizzaAdapter extends RecyclerView.Adapter<PizzaAdapter.PizzaViewHol
         }
     }
 
-    // AsyncTask to download image from URL
     private static class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView imageView;
 

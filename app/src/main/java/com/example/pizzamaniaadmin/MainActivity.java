@@ -1,50 +1,87 @@
 package com.example.pizzamaniaadmin;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
+import android.text.TextUtils;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class MainActivity extends AppCompatActivity {
+
+    private EditText etEmail, etPassword;
+    private Button btnLogin;
+    private CheckBox cbRemember;
+    private FirebaseAuth mAuth;
+
+    private SharedPreferences sharedPreferences;
+    private static final String PREFS_NAME = "loginPrefs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button btnMenu = findViewById(R.id.btnMenu);
+        mAuth = FirebaseAuth.getInstance();
+        sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 
-        btnMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        etEmail = findViewById(R.id.etUsername);
+        etPassword = findViewById(R.id.etPassword);
+        btnLogin = findViewById(R.id.btnSignIn);
+        cbRemember = findViewById(R.id.cbRemember);
 
-                startActivity(new Intent(MainActivity.this, MenuActivity.class));
-                finish();
-            }
-        });
+        btnLogin.setOnClickListener(v -> loginUser());
 
-        Button btnBranch = findViewById(R.id.btnBranch);
+        // Auto-fill email/password if Remember Me was previously selected
+        boolean remember = sharedPreferences.getBoolean("remember", false);
+        if (remember) {
+            etEmail.setText(sharedPreferences.getString("email", ""));
+            etPassword.setText(sharedPreferences.getString("password", ""));
+            cbRemember.setChecked(true);
+        }
+    }
 
-        btnBranch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    private void loginUser() {
+        String email = etEmail.getText().toString().trim();
+        String password = etPassword.getText().toString().trim();
 
-                startActivity(new Intent(MainActivity.this, BranchesActivity.class));
-                finish();
-            }
-        });
+        if (TextUtils.isEmpty(email)) {
+            etEmail.setError("Email required");
+            return;
+        }
+        if (TextUtils.isEmpty(password)) {
+            etPassword.setError("Password required");
+            return;
+        }
 
-        Button btnOrder = findViewById(R.id.btnOrder);
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        // Save Remember Me preference
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        if (cbRemember.isChecked()) {
+                            editor.putBoolean("remember", true);
+                            editor.putString("email", email);
+                            editor.putString("password", password);
+                        } else {
+                            editor.clear();
+                        }
+                        editor.apply();
 
-        btnOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                startActivity(new Intent(MainActivity.this, OrderActivity.class));
-                finish();
-            }
-        });
+                        startActivity(new Intent(MainActivity.this, HomeActivity.class));
+                        finish();
+                    } else {
+                        Toast.makeText(MainActivity.this, "Incorrect Username Or Password! " ,
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

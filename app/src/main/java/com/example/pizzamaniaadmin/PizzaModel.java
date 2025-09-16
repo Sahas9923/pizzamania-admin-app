@@ -9,11 +9,8 @@ public class PizzaModel implements Serializable {
     private double price;
     private String description;
     private String imageUrl;
-
-    // Empty constructor required for Firebase
     public PizzaModel() {}
 
-    // Constructor for creating a pizza
     public PizzaModel(String id, String name, String size, double price, String description, String imageUrl) {
         this.id = id;
         this.name = name;
@@ -23,7 +20,6 @@ public class PizzaModel implements Serializable {
         this.imageUrl = imageUrl;
     }
 
-    // Getters & Setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 

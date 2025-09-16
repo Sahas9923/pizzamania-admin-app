@@ -10,7 +10,10 @@
     <string-array name="status_array">
         <item>All</item>
         <item>Pending</item>
-        <item>Completed</item>
+        <item>Approved</item>
+        <item>Processing</item>
+        <item>Dispatched</item>
+        <item>Delivered</item>
         <item>Cancelled</item>
     </string-array>
 </resources>

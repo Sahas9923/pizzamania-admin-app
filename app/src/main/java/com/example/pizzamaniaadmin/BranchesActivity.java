@@ -1,16 +1,20 @@
 package com.example.pizzamaniaadmin;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.InputType;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.os.Bundle;
-import android.text.InputType;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,13 +22,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BranchesActivity extends AppCompatActivity {
 
-    private Button btnAddBranch, btnViewBranches;
-    private LinearLayout branchListContainer;
+    private Button btnAddBranch;
+    private RecyclerView rvBranches;
+    private BranchAdapter branchAdapter;
+    private List<Branch> branchList = new ArrayList<>();
     private DatabaseReference dbRef;
 
     @Override
@@ -33,19 +41,31 @@ public class BranchesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_branches);
 
         btnAddBranch = findViewById(R.id.btnAddBranch);
-        btnViewBranches = findViewById(R.id.btnViewBranches);
-        branchListContainer = findViewById(R.id.branchListContainer);
+        rvBranches = findViewById(R.id.rvBranches);
+
+        rvBranches.setLayoutManager(new LinearLayoutManager(this));
+        branchAdapter = new BranchAdapter(this, branchList);
+        rvBranches.setAdapter(branchAdapter);
 
         dbRef = FirebaseDatabase.getInstance("https://pizzamania-d2775-default-rtdb.firebaseio.com/")
                 .getReference("branches");
 
-        // Add sample branches if none exist
         addSampleBranches();
+        loadBranches();
 
         btnAddBranch.setOnClickListener(v -> showAddBranchDialog());
-        btnViewBranches.setOnClickListener(v -> loadBranches());
-    }
 
+        ImageButton btnBack = findViewById(R.id.btnBack);
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                startActivity(new Intent(BranchesActivity.this, HomeActivity.class));
+                finish();
+            }
+        });
+    }
     private void addSampleBranches() {
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -132,6 +152,7 @@ public class BranchesActivity extends AppCompatActivity {
             Branch newBranch = new Branch(name, address, lat, lng, hours, days);
             dbRef.child(name).setValue(newBranch);
             Toast.makeText(this, "Branch added", Toast.LENGTH_SHORT).show();
+            loadBranches(); // Refresh list
         });
 
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
@@ -139,8 +160,7 @@ public class BranchesActivity extends AppCompatActivity {
     }
 
     private void loadBranches() {
-        branchListContainer.removeAllViews();
-
+        branchList.clear();
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -148,15 +168,10 @@ public class BranchesActivity extends AppCompatActivity {
                     for(DataSnapshot snap : snapshot.getChildren()){
                         Branch branch = snap.getValue(Branch.class);
                         if(branch != null){
-                            TextView tv = new TextView(BranchesActivity.this);
-                            tv.setText(branch.getName() + " - " + branch.getAddress() +
-                                    "\nLat: " + branch.getLatitude() + ", Lng: " + branch.getLongitude() +
-                                    "\nHours: " + branch.getOpeningHours() + ", Days: " + branch.getOpeningDays());
-                            tv.setPadding(0,16,0,16);
-                            tv.setTextSize(16f);
-                            branchListContainer.addView(tv);
+                            branchList.add(branch);
                         }
                     }
+                    branchAdapter.notifyDataSetChanged();
                 }
             }
 
@@ -165,7 +180,6 @@ public class BranchesActivity extends AppCompatActivity {
         });
     }
 
-    // Branch Model
     public static class Branch {
         private String name, address, openingHours, openingDays;
         private double latitude, longitude;
