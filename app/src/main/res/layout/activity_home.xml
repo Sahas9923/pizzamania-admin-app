@@ -56,7 +56,8 @@
             android:textSize="24sp"
             android:textStyle="bold"
             android:background="@drawable/button_background"
-            android:backgroundTint="#00BF63"
+            android:backgroundTint="#D73E5C
+"
             app:backgroundTint="@null"
             app:rippleColor="#33000000"
             android:elevation="4dp"/>
@@ -71,7 +72,7 @@
             android:textSize="24sp"
             android:textStyle="bold"
             android:background="@drawable/button_background"
-            android:backgroundTint="#FF9800"
+            android:backgroundTint="#F4B02A"
             app:backgroundTint="@null"
             android:elevation="4dp"/>
 
@@ -84,7 +85,7 @@
             android:textSize="24sp"
             android:textStyle="bold"
             android:background="@drawable/button_background"
-            android:backgroundTint="#1976D2"
+            android:backgroundTint="#00BFB9"
             app:backgroundTint="@null"
             android:elevation="4dp"/>
 
