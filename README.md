@@ -123,5 +123,5 @@ This repository is part of the **PizzaMania platform**, and the complete academi
 
 ## 📜 License
 
-This project is released **strictly for educational and academic purposes**.
+This project is released for educational and academic purposes.
 
